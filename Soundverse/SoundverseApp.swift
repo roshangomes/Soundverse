@@ -10,11 +10,14 @@ import SwiftUI
 @main
 struct SoundverseApp: App {
     
+//    init() {
+//        NotificationManager.shared.requestPermission()
+//    }
+    
     var body: some Scene {
         
         WindowGroup {
             ContentView()
-                .preferredColorScheme(.dark)
         }
     }
 }

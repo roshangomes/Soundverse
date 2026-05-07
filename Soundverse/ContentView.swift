@@ -4,6 +4,8 @@
 //
 //  Created by Steve on 07/05/26.
 //
+
+
 import SwiftUI
 
 struct ContentView: View {
@@ -21,12 +23,16 @@ struct ContentView: View {
             )
             
             if showSideMenu {
+                
                 SideMenuView(isShowing: $showSideMenu)
                     .transition(.move(edge: .leading))
                     .zIndex(1)
             }
         }
-        .animation(.spring(response: 0.35, dampingFraction: 0.8), value: showSideMenu)
+        .animation(
+            .spring(response: 0.35, dampingFraction: 0.82),
+            value: showSideMenu
+        )
     }
 }
 

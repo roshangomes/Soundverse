@@ -1,0 +1,420 @@
+//
+//  MainView.swift
+//  Soundverse
+//
+//  Created by Steve on 07/05/26.
+//
+import SwiftUI
+
+struct MainView: View {
+    
+    @Environment(\.colorScheme) var colorScheme
+    
+    var primaryText: Color {
+        colorScheme == .dark ? .white : .black
+    }
+    
+    var secondaryText: Color {
+        colorScheme == .dark ? .gray : .gray.opacity(0.8)
+    }
+    
+    var cardBackground: some ShapeStyle {
+        colorScheme == .dark ?
+            AnyShapeStyle(.ultraThinMaterial) :
+            AnyShapeStyle(Color.white.opacity(0.75))
+    }
+    
+    @Binding var showSideMenu: Bool
+    @Binding var showNotifications: Bool
+    
+    var body: some View {
+        
+        NavigationStack {
+            
+            ZStack {
+                
+                backgroundView
+                
+                ScrollView(showsIndicators: false) {
+                    
+                    VStack(spacing: 28) {
+                        
+                        topBar
+                        
+                        greetingSection
+                        
+                        musicPlayerCard
+                        
+                        aiPromptCard
+                        
+                        chatPreview
+                        
+                        trendingTracks
+                    }
+                    .padding(.bottom, 40)
+                }
+            }
+        }
+    }
+}
+
+#Preview {
+    MainView(
+        showSideMenu: .constant(false),
+        showNotifications: .constant(false)
+    )
+}
+
+extension MainView {
+    
+    // MARK: Background
+    
+    var backgroundView: some View {
+        
+        Group {
+            
+            if colorScheme == .dark {
+                
+                LinearGradient(
+                    colors: [
+                        Color.black,
+                        Color(red: 0.06, green: 0.05, blue: 0.10),
+                        Color(red: 0.02, green: 0.02, blue: 0.04)
+                    ],
+                    startPoint: .topLeading,
+                    endPoint: .bottomTrailing
+                )
+                
+            } else {
+                
+                LinearGradient(
+                    colors: [
+                        Color.white,
+                        Color(red: 0.95, green: 0.95, blue: 0.98),
+                        Color(red: 0.92, green: 0.92, blue: 0.97)
+                    ],
+                    startPoint: .topLeading,
+                    endPoint: .bottomTrailing
+                )
+            }
+        }
+        .ignoresSafeArea()
+    }
+    
+    // MARK: Top Bar
+    
+    var topBar: some View {
+        
+        HStack {
+            
+            Button {
+                
+                withAnimation {
+                    showSideMenu.toggle()
+                }
+                
+            } label: {
+                
+                Image(systemName: "line.3.horizontal")
+                    .font(.headline)
+                    .foregroundColor(primaryText)
+                    .frame(width: 42, height: 42)
+                    .background(
+                        colorScheme == .dark ?
+                            AnyShapeStyle(.ultraThinMaterial) :
+                            AnyShapeStyle(Color.white.opacity(0.9))
+                    )
+                    .clipShape(Circle())
+            }
+            
+            Spacer()
+            
+            VStack(spacing: 2) {
+                
+                Text("Soundverse")
+                    .font(.headline)
+                    .fontWeight(.semibold)
+                    .foregroundColor(primaryText)
+                
+                Text("AI Music Studio")
+                    .font(.caption2)
+                    .foregroundColor(secondaryText)
+            }
+            
+            Spacer()
+            
+            Button {
+                
+            } label: {
+                
+                ZStack(alignment: .topTrailing) {
+                    
+                    Image(systemName: "bell.fill")
+                        .font(.headline)
+                        .foregroundColor(primaryText)
+                        .frame(width: 42, height: 42)
+                        .background(
+                            colorScheme == .dark ?
+                                AnyShapeStyle(.ultraThinMaterial) :
+                                AnyShapeStyle(Color.white.opacity(0.9))
+                        )
+                        .clipShape(Circle())
+                    
+                    Circle()
+                        .fill(Color.purple)
+                        .frame(width: 8, height: 8)
+                }
+            }
+        }
+        .padding(.horizontal, 20)
+        .padding(.top, 12)
+    }
+    
+    // MARK: Greeting
+    
+    var greetingSection: some View {
+        
+        VStack(alignment: .leading, spacing: 6) {
+            
+            Text("Good Evening")
+                .font(.system(size: 40, weight: .bold))
+                .foregroundColor(primaryText)
+            
+            Text("Create music with AI magic")
+                .foregroundColor(secondaryText)
+                .font(.subheadline)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(.horizontal, 20)
+    }
+    
+    // MARK: Music Card
+    
+    var musicPlayerCard: some View {
+        
+        VStack(alignment: .leading, spacing: 20) {
+            
+            HStack(spacing: 16) {
+                
+                RoundedRectangle(cornerRadius: 22)
+                    .fill(
+                        LinearGradient(
+                            colors: [
+                                Color(red: 0.55, green: 0.35, blue: 0.95),
+                                Color(red: 0.35, green: 0.25, blue: 0.75)
+                            ],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        )
+                    )
+                    .frame(width: 86, height: 86)
+                    .overlay(
+                        Image(systemName: "music.note")
+                            .font(.largeTitle)
+                            .foregroundColor(.white)
+                    )
+                
+                VStack(alignment: .leading, spacing: 8) {
+                    
+                    Text("Midnight Echo")
+                        .font(.headline)
+                        .foregroundColor(primaryText)
+                    
+                    Text("Soundverse Originals")
+                        .font(.subheadline)
+                        .foregroundColor(secondaryText)
+                    
+                    HStack(spacing: 22) {
+                        
+                        Image(systemName: "backward.fill")
+                        
+                        Image(systemName: "pause.fill")
+                            .font(.title3)
+                        
+                        Image(systemName: "forward.fill")
+                    }
+                    .foregroundColor(primaryText)
+                }
+                
+                Spacer()
+            }
+            
+            VStack(spacing: 8) {
+                
+                Capsule()
+                    .fill(.white.opacity(0.12))
+                    .frame(height: 4)
+                    .overlay(alignment: .leading) {
+                        
+                        Capsule()
+                            .fill(
+                                LinearGradient(
+                                    colors: [
+                                        Color(red: 0.55, green: 0.35, blue: 0.95),
+                                        Color(red: 0.35, green: 0.25, blue: 0.75)
+                                    ],
+                                    startPoint: .leading,
+                                    endPoint: .trailing
+                                )
+                            )
+                            .frame(width: 130, height: 4)
+                    }
+                
+                HStack {
+                    
+                    Text("1:24")
+                    
+                    Spacer()
+                    
+                    Text("3:45")
+                }
+                .font(.caption)
+                .foregroundColor(secondaryText)
+            }
+        }
+        .padding(22)
+        .background(cardBackground)
+        .overlay(
+            RoundedRectangle(cornerRadius: 28)
+                .stroke(.white.opacity(0.05))
+        )
+        .cornerRadius(28)
+        .shadow(
+            color: colorScheme == .dark ? .black.opacity(0.2) : .gray.opacity(0.15),
+            radius: 12,
+            y: 6
+        )
+        .padding(.horizontal, 20)
+    }
+    
+    // MARK: AI Prompt
+    
+    var aiPromptCard: some View {
+        
+        VStack(alignment: .leading, spacing: 14) {
+            
+            Text("Ask Soundverse AI")
+                .font(.headline)
+                .foregroundColor(primaryText)
+            
+            HStack {
+                
+                Text("Generate a lo-fi beat for studying...")
+                    .foregroundColor(secondaryText)
+                
+                Spacer()
+                
+                Image(systemName: "arrow.up.circle.fill")
+                    .font(.title2)
+                    .foregroundColor(
+                        Color(red: 0.55, green: 0.35, blue: 0.95)
+                    )
+            }
+            .padding()
+            .background(cardBackground)
+            .cornerRadius(18)
+            .shadow(
+                color: colorScheme == .dark ? .black.opacity(0.2) : .gray.opacity(0.15),
+                radius: 12,
+                y: 6
+            )
+        }
+        .padding(.horizontal, 20)
+    }
+    
+    // MARK: Chat
+    
+    var chatPreview: some View {
+        
+        VStack(spacing: 14) {
+            
+            HStack {
+                
+                Spacer()
+                
+                Text("Create a cinematic synth soundtrack")
+                    .padding()
+                    .foregroundColor(.white)
+                    .background(
+                        LinearGradient(
+                            colors: [
+                                Color(red: 0.55, green: 0.35, blue: 0.95),
+                                Color(red: 0.35, green: 0.25, blue: 0.75)
+                            ],
+                            startPoint: .leading,
+                            endPoint: .trailing
+                        )
+                    )
+                    .cornerRadius(20)
+            }
+            
+            HStack {
+                
+                Text("Done. Generating your track now.")
+                    .padding()
+                    .foregroundColor(primaryText)
+                    .background(cardBackground)
+                    .cornerRadius(20)
+                
+                Spacer()
+            }
+        }
+        .padding(.horizontal, 20)
+    }
+    
+    // MARK: Trending
+    
+    var trendingTracks: some View {
+        
+        VStack(alignment: .leading, spacing: 18) {
+            
+            Text("Trending Tracks")
+                .font(.headline)
+                .foregroundColor(primaryText)
+            
+            ForEach(0..<3) { _ in
+                
+                HStack(spacing: 16) {
+                    
+                    RoundedRectangle(cornerRadius: 16)
+                        .fill(
+                            LinearGradient(
+                                colors: [
+                                    Color(red: 0.55, green: 0.35, blue: 0.95),
+                                    Color(red: 0.35, green: 0.25, blue: 0.75)
+                                ],
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing
+                            )
+                        )
+                        .frame(width: 60, height: 60)
+                    
+                    VStack(alignment: .leading, spacing: 4) {
+                        
+                        Text("Neon Dreams")
+                            .foregroundColor(primaryText)
+                            .fontWeight(.semibold)
+                        
+                        Text("Electronic • AI Generated")
+                            .foregroundColor(secondaryText)
+                            .font(.caption)
+                    }
+                    
+                    Spacer()
+                    
+                    Image(systemName: "play.fill")
+                        .foregroundColor(primaryText)
+                }
+                .padding()
+                .background(cardBackground)
+                .cornerRadius(22)
+                .shadow(
+                    color: colorScheme == .dark ? .black.opacity(0.2) : .gray.opacity(0.15),
+                    radius: 12,
+                    y: 6
+                )
+            }
+        }
+        .padding(.horizontal, 20)
+    }
+}
