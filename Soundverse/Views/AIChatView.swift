@@ -35,7 +35,8 @@ struct AIChatView: View {
             LinearGradient(
                 colors: [
                     Color.black,
-                    Color.indigo.opacity(0.8)
+                    Color(red: 0.05, green: 0.04, blue: 0.12),
+                    Color(red: 0.10, green: 0.08, blue: 0.25)
                 ],
                 startPoint: .top,
                 endPoint: .bottom
@@ -52,7 +53,25 @@ struct AIChatView: View {
                         
                         ForEach(messages) { message in
                             
-                            HStack {
+                            HStack(alignment: .bottom, spacing: 10) {
+                                
+                                if !message.isUser {
+                                    
+                                    Circle()
+                                        .fill(
+                                            LinearGradient(
+                                                colors: [.purple, .pink],
+                                                startPoint: .topLeading,
+                                                endPoint: .bottomTrailing
+                                            )
+                                        )
+                                        .frame(width: 34, height: 34)
+                                        .overlay(
+                                            Image(systemName: "sparkles")
+                                                .font(.caption)
+                                                .foregroundColor(.white)
+                                        )
+                                }
                                 
                                 if message.isUser {
                                     Spacer()
@@ -72,13 +91,14 @@ struct AIChatView: View {
                                         :
                                         LinearGradient(
                                             colors: [
-                                                Color.white.opacity(0.12)
+                                                Color.white.opacity(0.08),
+                                                Color.white.opacity(0.04)
                                             ],
                                             startPoint: .leading,
                                             endPoint: .trailing
                                         )
                                     )
-                                    .cornerRadius(20)
+                                    .cornerRadius(24)
                                 
                                 if !message.isUser {
                                     Spacer()
@@ -119,13 +139,22 @@ struct AIChatView: View {
                 
                 HStack(spacing: 14) {
                     
+                    Button {
+                        
+                    } label: {
+                        
+                        Image(systemName: "waveform")
+                            .font(.headline)
+                            .foregroundColor(.gray)
+                            .frame(width: 42, height: 42)
+                            .background(.white.opacity(0.08))
+                            .clipShape(Circle())
+                    }
+                    
                     TextField(
-                        "Ask Soundverse AI...",
+                        "What would you like to create?",
                         text: $messageText
                     )
-                    .padding()
-                    .background(.white.opacity(0.1))
-                    .cornerRadius(18)
                     .foregroundColor(.white)
                     
                     Button {
@@ -134,21 +163,47 @@ struct AIChatView: View {
                         
                     } label: {
                         
-                        Image(systemName: "arrow.up")
+                        Image(systemName: "paperplane.fill")
                             .font(.headline)
                             .foregroundColor(.white)
-                            .frame(width: 50, height: 50)
+                            .frame(width: 48, height: 48)
                             .background(
                                 LinearGradient(
-                                    colors: [.purple, .indigo],
+                                    colors: [
+                                        Color(red: 0.65, green: 0.35, blue: 1.0),
+                                        Color(red: 0.35, green: 0.25, blue: 0.9)
+                                    ],
                                     startPoint: .topLeading,
                                     endPoint: .bottomTrailing
                                 )
                             )
                             .clipShape(Circle())
+                            .shadow(
+                                color: .purple.opacity(0.4),
+                                radius: 8,
+                                y: 4
+                            )
                     }
                 }
-                .padding()
+                .padding(.horizontal, 16)
+                .padding(.vertical, 12)
+                .background(
+                    LinearGradient(
+                        colors: [
+                            Color.white.opacity(0.08),
+                            Color.white.opacity(0.04)
+                        ],
+                        startPoint: .top,
+                        endPoint: .bottom
+                    )
+                )
+                .overlay(
+                    RoundedRectangle(cornerRadius: 28)
+                        .stroke(.white.opacity(0.06))
+                )
+                .cornerRadius(28)
+                .padding(.horizontal)
+                .padding(.bottom, 12)
             }
         }
         .navigationTitle("Soundverse AI")

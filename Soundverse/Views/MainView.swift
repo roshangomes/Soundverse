@@ -230,22 +230,15 @@ extension MainView {
             
             HStack(spacing: 16) {
                 
-                RoundedRectangle(cornerRadius: 22)
-                    .fill(
-                        LinearGradient(
-                            colors: [
-                                Color(red: 0.55, green: 0.35, blue: 0.95),
-                                Color(red: 0.35, green: 0.25, blue: 0.75)
-                            ],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        )
-                    )
-                    .frame(width: 86, height: 86)
-                    .overlay(
-                        Image(systemName: "music.note")
-                            .font(.largeTitle)
-                            .foregroundColor(.white)
+                Image("cover0")
+                    .resizable()
+                    .scaledToFill()
+                    .frame(width: 100, height: 100)
+                    .clipShape(RoundedRectangle(cornerRadius: 24))
+                    .shadow(
+                        color: .purple.opacity(0.35),
+                        radius: 10,
+                        y: 5
                     )
                 
                 VStack(alignment: .leading, spacing: 8) {
@@ -356,32 +349,42 @@ extension MainView {
                 .font(.headline)
                 .foregroundColor(primaryText)
             
-            ForEach(0..<3) { _ in
+            ForEach(0..<3) { i in
                 
                 HStack(spacing: 16) {
                     
-                    RoundedRectangle(cornerRadius: 16)
-                        .fill(
-                            LinearGradient(
-                                colors: [
-                                    Color(red: 0.55, green: 0.35, blue: 0.95),
-                                    Color(red: 0.35, green: 0.25, blue: 0.75)
-                                ],
-                                startPoint: .topLeading,
-                                endPoint: .bottomTrailing
-                            )
+                    Image("cover\(i + 1)")
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: 70, height: 70)
+                        .clipShape(RoundedRectangle(cornerRadius: 18))
+                        .shadow(
+                            color: .purple.opacity(0.35),
+                            radius: 10,
+                            y: 5
                         )
-                        .frame(width: 60, height: 60)
                     
                     VStack(alignment: .leading, spacing: 4) {
                         
-                        Text("Neon Dreams")
-                            .foregroundColor(primaryText)
-                            .fontWeight(.semibold)
+                        Text(
+                            [
+                                "Neon Dreams",
+                                "Cyber Pulse",
+                                "Synth Horizon"
+                            ][i]
+                        )
+                        .foregroundColor(primaryText)
+                        .fontWeight(.semibold)
                         
-                        Text("Electronic • AI Generated")
-                            .foregroundColor(secondaryText)
-                            .font(.caption)
+                        Text(
+                            [
+                                "Electronic • AI Generated",
+                                "Synthwave • Future Bass",
+                                "Ambient • Cyberpunk"
+                            ][i]
+                        )
+                        .foregroundColor(secondaryText)
+                        .font(.caption)
                     }
                     
                     Spacer()

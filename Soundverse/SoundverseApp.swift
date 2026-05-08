@@ -20,7 +20,7 @@ struct SoundverseApp: App {
         
         WindowGroup {
             
-            ContentView()
+            SplashView()
                 .environmentObject(appState)
                 .onAppear {
                     NotificationManager.shared.appState = appState
