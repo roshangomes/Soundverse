@@ -10,14 +10,21 @@ import SwiftUI
 @main
 struct SoundverseApp: App {
     
-//    init() {
-//        NotificationManager.shared.requestPermission()
-//    }
+    @StateObject var appState = AppState()
+    
+    init() {
+        NotificationManager.shared.requestPermission()
+    }
     
     var body: some Scene {
         
         WindowGroup {
+            
             ContentView()
+                .environmentObject(appState)
+                .onAppear {
+                    NotificationManager.shared.appState = appState
+                }
         }
     }
 }

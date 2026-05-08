@@ -9,6 +9,7 @@ import SwiftUI
 struct MainView: View {
     
     @Environment(\.colorScheme) var colorScheme
+    @StateObject var audioManager = AudioManager.shared
     
     var primaryText: Color {
         colorScheme == .dark ? .white : .black
@@ -31,7 +32,7 @@ struct MainView: View {
         
         NavigationStack {
             
-            ZStack {
+            ZStack(alignment: .bottomTrailing) {
                 
                 backgroundView
                 
@@ -45,14 +46,45 @@ struct MainView: View {
                         
                         musicPlayerCard
                         
-                        aiPromptCard
-                        
-                        chatPreview
-                        
                         trendingTracks
                     }
-                    .padding(.bottom, 40)
+                    .padding(.bottom, 100)
                 }
+                
+                NavigationLink {
+                    
+                    AIChatView()
+                    
+                } label: {
+                    
+                    ZStack {
+                        
+                        Circle()
+                            .fill(
+                                LinearGradient(
+                                    colors: [
+                                        Color(red: 0.55, green: 0.35, blue: 0.95),
+                                        Color(red: 0.35, green: 0.25, blue: 0.75)
+                                    ],
+                                    startPoint: .topLeading,
+                                    endPoint: .bottomTrailing
+                                )
+                            )
+                            .frame(width: 64, height: 64)
+                            .scaleEffect(1.0)
+                            .shadow(
+                                color: .purple.opacity(0.4),
+                                radius: 12,
+                                y: 6
+                            )
+                        
+                        Image(systemName: "wand.and.stars")
+                            .font(.title2)
+                            .foregroundColor(.white)
+                    }
+                }
+                .padding(.trailing, 22)
+                .padding(.bottom, 28)
             }
         }
     }
@@ -143,7 +175,9 @@ extension MainView {
             
             Spacer()
             
-            Button {
+            NavigationLink {
+                
+                NotificationView()
                 
             } label: {
                 
@@ -216,11 +250,11 @@ extension MainView {
                 
                 VStack(alignment: .leading, spacing: 8) {
                     
-                    Text("Midnight Echo")
+                    Text("Shape of You")
                         .font(.headline)
                         .foregroundColor(primaryText)
                     
-                    Text("Soundverse Originals")
+                    Text("Ed Sheeran")
                         .font(.subheadline)
                         .foregroundColor(secondaryText)
                     
@@ -228,8 +262,19 @@ extension MainView {
                         
                         Image(systemName: "backward.fill")
                         
-                        Image(systemName: "pause.fill")
+                        Button {
+                            
+                            audioManager.togglePlayback()
+                            
+                        } label: {
+                            
+                            Image(
+                                systemName: audioManager.isPlaying
+                                    ? "pause.fill"
+                                    : "play.fill"
+                            )
                             .font(.title3)
+                        }
                         
                         Image(systemName: "forward.fill")
                     }
@@ -246,27 +291,41 @@ extension MainView {
                     .frame(height: 4)
                     .overlay(alignment: .leading) {
                         
-                        Capsule()
-                            .fill(
-                                LinearGradient(
-                                    colors: [
-                                        Color(red: 0.55, green: 0.35, blue: 0.95),
-                                        Color(red: 0.35, green: 0.25, blue: 0.75)
-                                    ],
-                                    startPoint: .leading,
-                                    endPoint: .trailing
-                                )
-                            )
-                            .frame(width: 130, height: 4)
+                        GeometryReader { geometry in
+                            
+                            ZStack(alignment: .leading) {
+                                
+                                Capsule()
+                                    .fill(.white.opacity(0.12))
+                                    .frame(height: 4)
+                                
+                                Capsule()
+                                    .fill(
+                                        LinearGradient(
+                                            colors: [
+                                                Color(red: 0.55, green: 0.35, blue: 0.95),
+                                                Color(red: 0.35, green: 0.25, blue: 0.75)
+                                            ],
+                                            startPoint: .leading,
+                                            endPoint: .trailing
+                                        )
+                                    )
+                                    .frame(
+                                        width: geometry.size.width * audioManager.progress,
+                                        height: 4
+                                    )
+                            }
+                        }
+                        .frame(height: 4)
                     }
                 
                 HStack {
                     
-                    Text("1:24")
+                    Text(audioManager.currentTime)
                     
                     Spacer()
                     
-                    Text("3:45")
+                    Text(audioManager.duration)
                 }
                 .font(.caption)
                 .foregroundColor(secondaryText)
@@ -284,81 +343,6 @@ extension MainView {
             radius: 12,
             y: 6
         )
-        .padding(.horizontal, 20)
-    }
-    
-    // MARK: AI Prompt
-    
-    var aiPromptCard: some View {
-        
-        VStack(alignment: .leading, spacing: 14) {
-            
-            Text("Ask Soundverse AI")
-                .font(.headline)
-                .foregroundColor(primaryText)
-            
-            HStack {
-                
-                Text("Generate a lo-fi beat for studying...")
-                    .foregroundColor(secondaryText)
-                
-                Spacer()
-                
-                Image(systemName: "arrow.up.circle.fill")
-                    .font(.title2)
-                    .foregroundColor(
-                        Color(red: 0.55, green: 0.35, blue: 0.95)
-                    )
-            }
-            .padding()
-            .background(cardBackground)
-            .cornerRadius(18)
-            .shadow(
-                color: colorScheme == .dark ? .black.opacity(0.2) : .gray.opacity(0.15),
-                radius: 12,
-                y: 6
-            )
-        }
-        .padding(.horizontal, 20)
-    }
-    
-    // MARK: Chat
-    
-    var chatPreview: some View {
-        
-        VStack(spacing: 14) {
-            
-            HStack {
-                
-                Spacer()
-                
-                Text("Create a cinematic synth soundtrack")
-                    .padding()
-                    .foregroundColor(.white)
-                    .background(
-                        LinearGradient(
-                            colors: [
-                                Color(red: 0.55, green: 0.35, blue: 0.95),
-                                Color(red: 0.35, green: 0.25, blue: 0.75)
-                            ],
-                            startPoint: .leading,
-                            endPoint: .trailing
-                        )
-                    )
-                    .cornerRadius(20)
-            }
-            
-            HStack {
-                
-                Text("Done. Generating your track now.")
-                    .padding()
-                    .foregroundColor(primaryText)
-                    .background(cardBackground)
-                    .cornerRadius(20)
-                
-                Spacer()
-            }
-        }
         .padding(.horizontal, 20)
     }
     

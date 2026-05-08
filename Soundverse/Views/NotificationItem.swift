@@ -17,6 +17,8 @@ struct NotificationItem: Identifiable {
 
 struct NotificationView: View {
     
+    @Environment(\.colorScheme) var colorScheme
+    
     let notifications = [
         NotificationItem(
             title: "Track Generated",
@@ -32,13 +34,53 @@ struct NotificationView: View {
         )
     ]
     
+    var backgroundGradient: LinearGradient {
+        
+        if colorScheme == .dark {
+            
+            return LinearGradient(
+                colors: [
+                    Color.black,
+                    Color.indigo.opacity(0.7)
+                ],
+                startPoint: .top,
+                endPoint: .bottom
+            )
+            
+        } else {
+            
+            return LinearGradient(
+                colors: [
+                    Color.white,
+                    Color(red: 0.95, green: 0.95, blue: 0.98)
+                ],
+                startPoint: .top,
+                endPoint: .bottom
+            )
+        }
+    }
+    
+    var primaryText: Color {
+        colorScheme == .dark ? .white : .black
+    }
+    
+    var secondaryText: Color {
+        colorScheme == .dark ? .gray : .gray.opacity(0.8)
+    }
+    
+    var cardBackground: some ShapeStyle {
+        colorScheme == .dark ?
+            AnyShapeStyle(.ultraThinMaterial) :
+            AnyShapeStyle(Color.white.opacity(0.75))
+    }
+    
     var body: some View {
         
         NavigationStack {
             
             ZStack {
                 
-                Color.black
+                backgroundGradient
                     .ignoresSafeArea()
                 
                 ScrollView {
@@ -49,7 +91,7 @@ struct NotificationView: View {
                             
                             Button {
                                 
-//                                NotificationManager.shared.scheduleNotification()
+                                NotificationManager.shared.scheduleNotification()
                                 
                             } label: {
                                 
@@ -66,19 +108,24 @@ struct NotificationView: View {
                                     VStack(alignment: .leading, spacing: 4) {
                                         
                                         Text(item.title)
-                                            .foregroundColor(.white)
+                                            .foregroundColor(primaryText)
                                             .fontWeight(.semibold)
                                         
                                         Text(item.subtitle)
-                                            .foregroundColor(.gray)
+                                            .foregroundColor(secondaryText)
                                             .font(.caption)
                                     }
                                     
                                     Spacer()
                                 }
                                 .padding()
-                                .background(.ultraThinMaterial)
+                                .background(cardBackground)
                                 .cornerRadius(22)
+                                .shadow(
+                                    color: colorScheme == .dark ? .black.opacity(0.2) : .gray.opacity(0.15),
+                                    radius: 10,
+                                    y: 5
+                                )
                             }
                         }
                     }
